@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" path="res://scenes/world.gd" id="1_1itbi"]
 [ext_resource type="PackedScene" uid="uid://bfkrikf1ael5r" path="res://assets/environment.tscn" id="1_wk0dv"]
-[ext_resource type="PackedScene" uid="uid://cgc0iclqtqky6" path="res://scenes/characters/player.tscn" id="2_58qr2"]
+[ext_resource type="PackedScene" uid="uid://dvg16lo80076t" path="res://scenes/ui/main_menu.tscn" id="3_4p6lo"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_vtskp"]
 sky_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
@@ -29,4 +29,10 @@ environment = SubResource("Environment_j2oth")
 
 [node name="environment" parent="." instance=ExtResource("1_wk0dv")]
 
-[node name="Player" parent="." instance=ExtResource("2_58qr2")]
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="MainMenu" parent="CanvasLayer" instance=ExtResource("3_4p6lo")]
+
+[node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="."]
+_spawnable_scenes = PackedStringArray("res://scenes/characters/player.tscn")
+spawn_path = NodePath("..")
