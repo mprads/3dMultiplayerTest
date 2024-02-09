@@ -2,6 +2,7 @@ extends Node
 
 @onready var main_menu: PanelContainer = $CanvasLayer/MainMenu
 @onready var host_button: Button = $CanvasLayer/MainMenu/MarginContainer/VBoxContainer/HostButton
+@onready var local_host_button: Button = $CanvasLayer/MainMenu/MarginContainer/VBoxContainer/LocalHostButton
 @onready var join_button: Button = $CanvasLayer/MainMenu/MarginContainer/VBoxContainer/JoinButton
 @onready var address_entry: LineEdit = $CanvasLayer/MainMenu/MarginContainer/VBoxContainer/AddressEntry
 @onready var hud: Control = $CanvasLayer/HUD
@@ -18,7 +19,8 @@ func _unhandled_input(event: InputEvent) -> void:
 
 
 func _ready() -> void:
-	host_button.pressed.connect(_on_host_button_pressed)
+	host_button.pressed.connect(_on_host_button_pressed.bind(false))
+	local_host_button.pressed.connect(_on_host_button_pressed.bind(true))
 	join_button.pressed.connect(_on_join_button_pressed)
 	multiplayer_spawner.spawned.connect(_on_multiplayer_spawned)
 
@@ -32,7 +34,7 @@ func _add_player(peer_id) -> void:
 		player.health_changed.connect(_on_player_health_changed)
 
 
-func _on_host_button_pressed() -> void:
+func _on_host_button_pressed(local: bool) -> void:
 	main_menu.hide()
 	hud.show()
 
@@ -43,12 +45,19 @@ func _on_host_button_pressed() -> void:
 
 	_add_player(multiplayer.get_unique_id())
 
+	if !local:
+		udnp_setup()
+
 
 func _on_join_button_pressed() -> void:
 	main_menu.hide()
 	hud.show()
+	var address = "localhost"
+	if address_entry.text:
+		address = address_entry.text
+	print(address)
 
-	enet_peer.create_client("localhost", PORT)
+	enet_peer.create_client(address, PORT)
 	multiplayer.multiplayer_peer = enet_peer
 
 
@@ -65,3 +74,17 @@ func _remove_player(peer_id: int) -> void:
 	var player = get_node_or_null(str(peer_id))
 	if player:
 		player.queue_free()
+
+
+func udnp_setup() -> void:
+	var upnp = UPNP.new()
+	var discover_result = upnp.discover()
+
+	assert(discover_result == UPNP.UPNP_RESULT_SUCCESS, "UPNP Discover Failed Error %s" % discover_result)
+
+	assert(upnp.get_gateway() && upnp.get_gateway().is_valid_gateway(), "UPNP Invalid Gateway!")
+
+	var map_result = upnp.add_port_mapping(PORT)
+	assert(map_result == UPNP.UPNP_RESULT_SUCCESS, "UPNP Port Mapping Failed Error %s" % map_result)
+
+	print("Success address: %s" % upnp.query_external_address())

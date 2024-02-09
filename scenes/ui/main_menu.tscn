@@ -33,6 +33,10 @@ vertical_alignment = 1
 layout_mode = 2
 text = "Host"
 
+[node name="LocalHostButton" type="Button" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "Local"
+
 [node name="JoinButton" type="Button" parent="MarginContainer/VBoxContainer"]
 layout_mode = 2
 text = "Join"
