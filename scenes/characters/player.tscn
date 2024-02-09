@@ -185,6 +185,10 @@ local_coords = true
 process_material = SubResource("ParticleProcessMaterial_vyji6")
 draw_pass_1 = SubResource("PlaneMesh_ka3x5")
 
+[node name="RayCast3D" type="RayCast3D" parent="Camera3D"]
+target_position = Vector3(0, 0, -50)
+collision_mask = 2
+
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 libraries = {
 "": SubResource("AnimationLibrary_vxxyb")
