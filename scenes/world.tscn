@@ -1,8 +1,9 @@
-[gd_scene load_steps=7 format=3 uid="uid://brfwndnn681q2"]
+[gd_scene load_steps=10 format=3 uid="uid://brfwndnn681q2"]
 
 [ext_resource type="Script" path="res://scenes/world.gd" id="1_1itbi"]
 [ext_resource type="PackedScene" uid="uid://bfkrikf1ael5r" path="res://assets/environment.tscn" id="1_wk0dv"]
 [ext_resource type="PackedScene" uid="uid://dvg16lo80076t" path="res://scenes/ui/main_menu.tscn" id="3_4p6lo"]
+[ext_resource type="Texture2D" uid="uid://cmope0n43glob" path="res://addons/kenney_particle_pack/circle_05.png" id="4_xqs44"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_vtskp"]
 sky_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
@@ -16,6 +17,12 @@ background_mode = 2
 sky = SubResource("Sky_pctal")
 tonemap_mode = 2
 glow_enabled = true
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_amql7"]
+bg_color = Color(1, 0.341176, 0.305882, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_4an1b"]
+bg_color = Color(0.282353, 0.705882, 0.215686, 1)
 
 [node name="World" type="Node"]
 script = ExtResource("1_1itbi")
@@ -32,6 +39,45 @@ environment = SubResource("Environment_j2oth")
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
 [node name="MainMenu" parent="CanvasLayer" instance=ExtResource("3_4p6lo")]
+
+[node name="HUD" type="Control" parent="CanvasLayer"]
+visible = false
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="TextureRect" type="TextureRect" parent="CanvasLayer/HUD"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.03, 0.03)
+pivot_offset = Vector2(576, 324)
+texture = ExtResource("4_xqs44")
+stretch_mode = 5
+
+[node name="HealthBar" type="ProgressBar" parent="CanvasLayer/HUD"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 310.0
+offset_top = 36.0
+offset_right = -310.0
+offset_bottom = -566.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/background = SubResource("StyleBoxFlat_amql7")
+theme_override_styles/fill = SubResource("StyleBoxFlat_4an1b")
+max_value = 3.0
+value = 3.0
+show_percentage = false
 
 [node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="."]
 _spawnable_scenes = PackedStringArray("res://scenes/characters/player.tscn")
