@@ -10,11 +10,22 @@ const JUMP_VELOCITY = 10.0
 var gravity: float = 20.0
 
 
+func _enter_tree() -> void:
+	set_multiplayer_authority(str(name).to_int())
+
+
 func _ready() -> void:
+	if !is_multiplayer_authority():
+		return
+
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+	camera_3d.current = true
 
 
 func _unhandled_input(event: InputEvent) -> void:
+	if !is_multiplayer_authority():
+		return
+
 	if event is InputEventMouseMotion:
 		rotate_y(-event.relative.x * .005)
 		camera_3d.rotate_x(-event.relative.y * .005)
@@ -24,6 +35,9 @@ func _unhandled_input(event: InputEvent) -> void:
 		_play_shoot_effects()
 
 func _physics_process(delta: float) -> void:
+	if !is_multiplayer_authority():
+		return
+
 	# Add the gravity.
 	if not is_on_floor():
 		velocity.y -= gravity * delta

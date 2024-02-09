@@ -1,4 +1,4 @@
-[gd_scene load_steps=16 format=3 uid="uid://cgc0iclqtqky6"]
+[gd_scene load_steps=17 format=3 uid="uid://cgc0iclqtqky6"]
 
 [ext_resource type="Script" path="res://scenes/characters/player.gd" id="1_digth"]
 [ext_resource type="PackedScene" uid="uid://omhwc33escpj" path="res://assets/pistol.blend" id="2_wmppn"]
@@ -37,6 +37,33 @@ material = SubResource("StandardMaterial3D_ri3fx")
 size = Vector2(0.5, 0.5)
 orientation = 2
 
+[sub_resource type="Animation" id="Animation_vx5rh"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Camera3D/pistol:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0.5, -0.25, -0.5)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Camera3D/pistol:rotation")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0, 0, 0)]
+}
+
 [sub_resource type="Animation" id="Animation_au2lr"]
 resource_name = "idle"
 length = 3.0
@@ -64,33 +91,6 @@ tracks/1/keys = {
 "transitions": PackedFloat32Array(-2, -2),
 "update": 0,
 "values": [Vector3(0, 0, 0), Vector3(-0.261799, 0, 0)]
-}
-
-[sub_resource type="Animation" id="Animation_vx5rh"]
-length = 0.001
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("Camera3D/pistol:position")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector3(0.5, -0.25, -0.5)]
-}
-tracks/1/type = "value"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath("Camera3D/pistol:rotation")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector3(0, 0, 0)]
 }
 
 [sub_resource type="Animation" id="Animation_7xaln"]
@@ -146,7 +146,19 @@ _data = {
 "shoot": SubResource("Animation_wqge8")
 }
 
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_tbfbu"]
+properties/0/path = NodePath(".:position")
+properties/0/spawn = true
+properties/0/replication_mode = 1
+properties/1/path = NodePath(".:rotation")
+properties/1/spawn = true
+properties/1/replication_mode = 1
+properties/2/path = NodePath("Camera3D:rotation")
+properties/2/spawn = true
+properties/2/replication_mode = 1
+
 [node name="Player" type="CharacterBody3D"]
+collision_layer = 2
 script = ExtResource("1_digth")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
@@ -179,3 +191,6 @@ libraries = {
 }
 autoplay = "idle"
 playback_default_blend_time = 0.05
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
+replication_config = SubResource("SceneReplicationConfig_tbfbu")
